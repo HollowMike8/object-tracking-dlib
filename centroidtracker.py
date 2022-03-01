@@ -84,6 +84,8 @@ class CentroidTracker:
 			# goal will be to match an input centroid to an existing
 			# object centroid
 			D = dist.cdist(np.array(objectCentroids), inputCentroids)
+			#check 01.03.22
+			print(D)
 
 			# in order to perform this matching we must (1) find the
 			# smallest value in each row and then (2) sort the row
