@@ -159,8 +159,5 @@ class CentroidTracker:
                 for col in unusedCols:
                     self.register(inputCentroids[col])
                     
-        # update the frame counter
-        self.frame_count += 1
-        
         # return the set of trackable objects
         return self.objects
