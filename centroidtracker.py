@@ -138,7 +138,7 @@ class CentroidTracker:
                 # counter
                 objectID = objectIDs[row]
                 
-                # adding additional code 03.03.22
+                # adding additional code beginning (03.03.22)
                 
                 # initialize T-1 state with displacement, initial velocity(0)
                 # and calculate the acceleration
@@ -147,6 +147,9 @@ class CentroidTracker:
                     v11 = 0
                     v12, a1 = self.eval_state(s, v11, t=(1/30))
                     self.stateTminus1[objectID] = [s, v11, v12, a1]
+                    
+                    self.objects[objectID] = inputCentroids[col]
+                    self.disappeared[objectID] = 0
                 
                 # predict T state using information from T-1
                 elif self.frame_count > 1:
@@ -164,10 +167,18 @@ class CentroidTracker:
                     s = self.objects[objectID] - inputCentroids[col]
                     v22, a2 = self.eval_state(s, v21, t=(1/30))
                     self.stateT[objectID] = [s, v21, v22, a2]
-                    
-                self.objects[objectID] = inputCentroids[col]
-                self.disappeared[objectID] = 0
-
+                
+                # check if the same object/objects are detected or not
+                thres_disp = v21*(1/30)*0.5   # time to be replaced accor. fps
+                diffs = s - s_pred
+                
+                for i, diff in enumerate(diffs):
+                    if diff < thres_disp:
+                        self.objects[objectID[i]] = inputCentroids[col][i]
+                        self.disappeared[objectID[i]] = 0       
+                        
+                # adding additional code ending (04.03.22)
+                
                 # indicate that we have examined each of the row and
                 # column indexes, respectively
                 usedRows.add(row)
