@@ -156,7 +156,7 @@ class CentroidTracker:
                     # predict the next centroid position
                     v21 = self.stateTminus1[objectID][2]
                     a1 = self.stateTminus1[objectID][3]
-                    s_pred = self.pred_state(v11, a1, t=(1/30))
+                    s_pred = self.pred_state(v21, a1, t=(1/30))
                     
                     # update actual centroid position,velocity for state T-1,T
                     if len(self.stateT) == 0:
