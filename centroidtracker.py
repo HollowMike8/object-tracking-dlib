@@ -155,6 +155,12 @@ class CentroidTracker:
                     print(self.stateTminus1)
                 # predict T state using information from T-1
                 elif self.frame_count > 1:
+                    # update actual centroid position,velocity for state T-1,T
+                    if len(self.stateT) == 0:
+                        pass
+                    else:
+                       self.stateTminus1[objectID] = self.stateT[objectID]
+                    
                     print('self.objects[objectID]: %s'% self.objects[objectID])
                     print('inputCentroids[col]: %s'% inputCentroids[col])
                     # predict the next centroid position
@@ -162,12 +168,7 @@ class CentroidTracker:
                     a1 = self.stateTminus1[objectID][3]
                     s_pred = self.pred_state(v21, a1, t=(1/30))
                     print('s_pred:%s'% s_pred)
-                    # update actual centroid position,velocity for state T-1,T
-                    if len(self.stateT) == 0:
-                        pass
-                    else:
-                       self.stateTminus1[objectID] = self.stateT[objectID]
-                   
+                
                     s = self.objects[objectID] - inputCentroids[col]
                     v22, a2 = self.eval_state(s, v21, t=(1/30))
                     self.stateT[objectID] = [s, v21, v22, a2]
