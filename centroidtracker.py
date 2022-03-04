@@ -150,7 +150,7 @@ class CentroidTracker:
                     
                     self.objects[objectID] = inputCentroids[col]
                     self.disappeared[objectID] = 0
-                
+                    print(self.stateTminus1)
                 # predict T state using information from T-1
                 elif self.frame_count > 1:
                     # predict the next centroid position
@@ -167,7 +167,7 @@ class CentroidTracker:
                     s = self.objects[objectID] - inputCentroids[col]
                     v22, a2 = self.eval_state(s, v21, t=(1/30))
                     self.stateT[objectID] = [s, v21, v22, a2]
-                
+                    print(self.stateT)
                     # check if the same object/objects are detected or not
                     thres_disp = v21*(1/30)*0.5   # time to be replaced accor. fps
                     diffs = s - s_pred
