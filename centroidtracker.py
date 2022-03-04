@@ -175,11 +175,10 @@ class CentroidTracker:
                     print('thres_disp:%s'% thres_disp)
                     diffs = s - s_pred
                     print('diffs:%s'% diffs)
-                    for i, diff in enumerate(diffs):
-                        print('diff:%s'% diff)
-                        if diff < thres_disp:
-                            self.objects[objectID[i]] = inputCentroids[col][i]
-                            self.disappeared[objectID[i]] = 0       
+                    
+                    if (diff <= thres_disp).all():
+                        self.objects[objectID[i]] = inputCentroids[col][i]
+                        self.disappeared[objectID[i]] = 0       
                         
                 # adding additional code ending (04.03.22)
                 
