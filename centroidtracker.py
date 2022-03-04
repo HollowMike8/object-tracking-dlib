@@ -143,6 +143,8 @@ class CentroidTracker:
                 # initialize T-1 state with displacement, initial velocity(0)
                 # and calculate the acceleration
                 if self.frame_count == 1:
+                    print('self.objects[objectID]: %s'% self.objects[objectID])
+                    print('inputCentroids[col]: %s'% inputCentroids[col])
                     s = self.objects[objectID] - inputCentroids[col]
                     v11 = 0
                     v12, a1 = self.eval_state(s, v11, t=(1/30))
