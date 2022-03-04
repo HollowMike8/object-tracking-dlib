@@ -168,14 +168,14 @@ class CentroidTracker:
                     v22, a2 = self.eval_state(s, v21, t=(1/30))
                     self.stateT[objectID] = [s, v21, v22, a2]
                 
-                # check if the same object/objects are detected or not
-                thres_disp = v21*(1/30)*0.5   # time to be replaced accor. fps
-                diffs = s - s_pred
-                
-                for i, diff in enumerate(diffs):
-                    if diff < thres_disp:
-                        self.objects[objectID[i]] = inputCentroids[col][i]
-                        self.disappeared[objectID[i]] = 0       
+                    # check if the same object/objects are detected or not
+                    thres_disp = v21*(1/30)*0.5   # time to be replaced accor. fps
+                    diffs = s - s_pred
+
+                    for i, diff in enumerate(diffs):
+                        if diff < thres_disp:
+                            self.objects[objectID[i]] = inputCentroids[col][i]
+                            self.disappeared[objectID[i]] = 0       
                         
                 # adding additional code ending (04.03.22)
                 
