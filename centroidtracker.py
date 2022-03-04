@@ -12,9 +12,6 @@ class CentroidTracker:
         self.nextObjectID = 0
         self.objects = OrderedDict()
         self.disappeared = OrderedDict()
-        self.stateTminus1 = OrderedDict()
-        self.stateT = OrderedDict()
-        self.frame_count = 0
 
         # store the number of maximum consecutive frames a given
         # object is allowed to be marked as "disappeared" until we
@@ -38,19 +35,6 @@ class CentroidTracker:
         # both of our respective dictionaries
         del self.objects[objectID]
         del self.disappeared[objectID]
-    
-    def eval_state(self, s, v1, t=(1/30)):
-        # calculate the acceleration and the final velocity
-        a = 2*(s - v1*t)*(1/t**2)
-        v2 = v1 + a*t
-        
-        return v2, a
-    
-    def pred_state(self, v1, a, t=(1/30)):
-        # predict the diplacement/centroid location
-        s_pred = v1*t + 0.5*a*(t**2)
-        
-        return s_pred
     
     def update(self, rects):
         # check to see if the list of input bounding box rectangles
@@ -137,54 +121,9 @@ class CentroidTracker:
                 # set its new centroid, and reset the disappeared
                 # counter
                 objectID = objectIDs[row]
-                
-                # adding additional code beginning (03.03.22)
-                
-                # initialize T-1 state with displacement, initial velocity(0)
-                # and calculate the acceleration
-                if self.frame_count == 1:
-                    print('self.objects[objectID]: %s'% self.objects[objectID])
-                    print('inputCentroids[col]: %s'% inputCentroids[col])
-                    s = self.objects[objectID] - inputCentroids[col]
-                    v11 = 0
-                    v12, a1 = self.eval_state(s, v11, t=(1/30))
-                    self.stateTminus1[objectID] = [s, v11, v12, a1]
-                    
-                    self.objects[objectID] = inputCentroids[col]
-                    self.disappeared[objectID] = 0
-                    print(self.stateTminus1)
-                # predict T state using information from T-1
-                elif self.frame_count > 1:
-                    # update actual centroid position,velocity for state T-1,T
-                    if len(self.stateT) == 0:
-                        pass
-                    else:
-                       self.stateTminus1[objectID] = self.stateT[objectID]
-                    
-                    print('self.objects[objectID]: %s'% self.objects[objectID])
-                    print('inputCentroids[col]: %s'% inputCentroids[col])
-                    # predict the next centroid position
-                    v21 = self.stateTminus1[objectID][2]
-                    a1 = self.stateTminus1[objectID][3]
-                    s_pred = self.pred_state(v21, a1, t=(1/30))
-                    print('s_pred:%s'% s_pred)
-                
-                    s = self.objects[objectID] - inputCentroids[col]
-                    v22, a2 = self.eval_state(s, v21, t=(1/30))
-                    self.stateT[objectID] = [s, v21, v22, a2]
-                    print(self.stateT)
-                    # check if the same object/objects are detected or not
-                    thres_disp = v21*(1/30)*0.5   # time to be replaced accor. fps
-                    print('thres_disp:%s'% thres_disp)
-                    diffs = s - s_pred
-                    print('diffs:%s'% diffs)
-                    
-                    if (diffs <= thres_disp).all():
-                        self.objects[objectID] = inputCentroids[col]
-                        self.disappeared[objectID] = 0       
-                        
-                # adding additional code ending (04.03.22)
-                
+                self.objects[objectID] = inputCentroids[col]
+                self.disappeared[objectID] = 0       
+                  
                 # indicate that we have examined each of the row and
                 # column indexes, respectively
                 usedRows.add(row)
