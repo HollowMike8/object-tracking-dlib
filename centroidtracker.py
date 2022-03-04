@@ -159,7 +159,7 @@ class CentroidTracker:
                     v21 = self.stateTminus1[objectID][2]
                     a1 = self.stateTminus1[objectID][3]
                     s_pred = self.pred_state(v21, a1, t=(1/30))
-                    
+                    print('s_pred:%s'% s_pred)
                     # update actual centroid position,velocity for state T-1,T
                     if len(self.stateT) == 0:
                         pass
@@ -172,9 +172,11 @@ class CentroidTracker:
                     print(self.stateT)
                     # check if the same object/objects are detected or not
                     thres_disp = v21*(1/30)*0.5   # time to be replaced accor. fps
+                    print('thres_disp:%s'% thres_disp)
                     diffs = s - s_pred
-
+                    print('diffs:%s'% diffs)
                     for i, diff in enumerate(diffs):
+                        print('diff:%s'% diff)
                         if diff < thres_disp:
                             self.objects[objectID[i]] = inputCentroids[col][i]
                             self.disappeared[objectID[i]] = 0       
