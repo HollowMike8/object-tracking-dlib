@@ -21,3 +21,4 @@ label = "person"
 
 # define threshold confidence to filter weak detections
 thres_confidence = 0.2
+yolo_thres_confidence = 0.5
