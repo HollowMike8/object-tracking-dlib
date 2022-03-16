@@ -8,34 +8,34 @@ class KalmanBoxTracker(object):
     This class represents state of individual tracked objects observed as bbox.
     '''
     
-    def _convert_bbox_to_z(self, bbox):
+    def _convert_bbox_to_bbox2(self, bbox):
         '''
         Converts bbox parameters (top left and bottom right corners) 
-        [x1,y1,x2,y2] into [x,y,s,r] where x,y is the centre of the bbox 
+        [x1,y1,x2,y2] into [x,s,y,r] where x,y is the centre of the bbox 
         and s is the area and r isthe aspect ratio
         '''
         w = bbox[2]-bbox[0]
         h = bbox[3]-bbox[1]
         x = bbox[0]+w/2.
         y = bbox[1]+h/2.
-        s = w*h
-        r = w/float(h)        
-        return np.array([x,y,s,r]).reshape((4,1))
+        self.s = w*h
+        self.r = w/float(h)        
+        return np.array([x,self.s,y,self.r]).reshape((4,1))
     
     def _convert_x_to_bbox(self, x, score=None):
       """
-      Takes a bounding box in the centre form [x,y,s,r] and returns it in the 
-      form [x1,y1,x2,y2] where x1,y1 is top left and x2,y2 is bottom right
+      Takes state vector box in the form of [x,x_cap,y,y_cap] and returns it in 
+      the form [x1,y1,x2,y2] where x1,y1 is top left and x2,y2 is bottom right.
       """
-      w = np.sqrt(x[2]*x[3])
-      h = x[2]/w
+      w = np.sqrt(self.s*self.r)
+      h = self.s/w
       
-      bbox = np.array([x[0]-w/2.,x[1]-h/2.,x[0]+w/2.,x[1]+h/2.]).reshape((1,4))
+      bbox = np.array([x[0]-w/2.,x[2]-h/2.,x[0]+w/2.,x[2]+h/2.]).reshape((1,4))
       
       if(score==None):
           return bbox
       else:
-        return bbox, score
+          return bbox, score
     
     def __init__(self, bbox, dt=1, img=None):
         '''
@@ -83,7 +83,8 @@ class KalmanBoxTracker(object):
         
         # initial conditions
         self.kf.P = np.eye(4)*500
-        self.kf.x = self._convert_bbox_to_z(bbox)
+        bbox2 = self._convert_bbox_to_bbox2(bbox)
+        self.kf.x = np.array([[bbox2[0], 0, bbox2[1], 0]]).T
         
         self.time_since_update = 0
         self.id = KalmanBoxTracker.count
@@ -103,7 +104,8 @@ class KalmanBoxTracker(object):
         self.hit_streak += 1
         
         if bbox != []:
-            self.kf.update(self._convert_bbox_to_z(bbox))
+            z = np.dot(self.kf.H, self._convert_bbox_to_bbox2(bbox))
+            self.kf.update(z)
 
     def predict(self, img=None):
         '''
