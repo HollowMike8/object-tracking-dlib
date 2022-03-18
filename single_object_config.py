@@ -1,7 +1,3 @@
-# -----------------------------
-#   IMPORTS
-# -----------------------------
-# Import the necessary packages
 import os
 from sys import platform
 from IPython import get_ipython
@@ -11,7 +7,7 @@ if platform == "win32":
     path_dir = os.path.dirname(__file__)
     
 elif 'google.colab' in str(get_ipython()):
-    path_dir = "/content/object-tracking-dlib"
+    path_dir = "/content/object-tracking"
 
 # define the directory path to the input videos
 input_dir = os.path.join(path_dir, "input")

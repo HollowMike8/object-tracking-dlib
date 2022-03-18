@@ -23,10 +23,10 @@ class KalmanBoxTracker(object):
         return np.array([x,self.s,y,self.r]).reshape((4,1))
     
     def _convert_x_to_bbox(self, x, score=None):
-      """
+      '''
       Takes state vector box in the form of [x,x_cap,y,y_cap] and returns it in 
       the form [x1,y1,x2,y2] where x1,y1 is top left and x2,y2 is bottom right.
-      """
+      '''
       w = np.sqrt(self.s*self.r)
       h = self.s/w
       
@@ -87,6 +87,7 @@ class KalmanBoxTracker(object):
         self.kf.x = np.array([[bbox2[0], 0, bbox2[1], 0]]).T
         
         self.time_since_update = 0
+        KalmanBoxTracker.count = 0
         self.id = KalmanBoxTracker.count
         KalmanBoxTracker.count += 1
         self.history = []
@@ -106,7 +107,7 @@ class KalmanBoxTracker(object):
         if bbox != []:
             z = np.dot(self.kf.H, self._convert_bbox_to_bbox2(bbox))
             self.kf.update(z)
-
+    
     def predict(self, img=None):
         '''
         Advances the state vector and returns the predicted bbox estimate.
@@ -121,7 +122,7 @@ class KalmanBoxTracker(object):
         self.history.append(self._convert_x_to_bbox(self.kf.x))
         
         return self.history[-1][0]
-
+    
     def get_state(self):
         '''
         Returns the current bounding box estimate.
