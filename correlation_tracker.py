@@ -29,6 +29,7 @@ class CorrelationTracker(object):
         
         self.confidence = 0.
         self.time_since_update = 0
+        CorrelationTracker.count = 0
         self.id = CorrelationTracker.count
         CorrelationTracker.count += 1
         self.hits = 0
