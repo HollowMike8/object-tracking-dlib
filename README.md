@@ -23,3 +23,10 @@ Object Detection : Used single detection with the largest confidence
 3. mobilenet_ssd fails in some detection steps (for refresh_rate = 30 frames) due to occlusion
 4. Unsuccessful detection steps are skipped and tracking is used as before
 5. Tracking is re-initiated but with the last successful bounding box
+
+#### YOLOv3 + dlib correlation tracker:
+1. Object detection is performed once in every 60 frames
+2. Object detections (except initial) use additional criteria of checking if the new detection is close to previous bounding box (from tracking)
+3. Unsuccessful detection steps are skipped and tracking is used as before
+4. Tracking is re-initiated but with the last successful bounding box
+5. yolov3 fails in some detection steps (for refresh_rate = 30 frames) possibly due to occlusion
