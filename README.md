@@ -6,7 +6,7 @@ Note: Only single object detection is performed as a PoC
 
 Combinations of two object detection alogirithms and two tracking algorithms have been used to compare the results
 
-Object Detection : MobileNetSSD vs YOLOv3
+Object Detection : MobileNetSSD vs YOLOv3 <br />
 Tracking         : dlib correlation tracker vs kalman filter
 
 #### Trials performed:
