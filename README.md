@@ -15,3 +15,4 @@ Tracking         : dlib correlation tracker vs kalman filter
 3. YOLOv3 + dlib correlation tracker vs kalman tracker
 
 #### Results:
+Results are saved in the "output" folder
