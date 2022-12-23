@@ -30,3 +30,5 @@ Object Detection : Used single detection with the largest confidence
 3. Unsuccessful detection steps are skipped and tracking is used as before
 4. Tracking is re-initiated but with the last successful bounding box
 5. yolov3 fails in some detection steps (for refresh_rate = 30 frames) possibly due to occlusion
+
+Results are saved in "output" folder.
